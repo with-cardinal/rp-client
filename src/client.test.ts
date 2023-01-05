@@ -13,6 +13,11 @@ const spec = {
           return { auth, payload: payload };
         },
       },
+      queryError: {
+        proc: () => {
+          throw new Error("Something broke");
+        },
+      },
       mutationProc: {
         mutation: true,
         proc: (auth: Authorization, payload: { address: string }) => {
@@ -43,6 +48,21 @@ describe("client", () => {
     await close();
   });
 
+  describe("query", () => {
+    it("succeeds", async () => {
+      const result = await rpc.query("queryProc", {
+        name: "Alan",
+      });
+      assert.deepStrictEqual(result.payload.name, "Alan");
+    });
+
+    it("errors", async () => {
+      await assert.rejects(async () => await rpc.query("queryError"), {
+        status: Status.InternalServerError,
+      });
+    });
+  });
+
   describe("mutate", () => {
     it("succeeds", async () => {
       const result = await rpc.mutate("mutationProc", {
@@ -52,12 +72,9 @@ describe("client", () => {
     });
 
     it("errors", async () => {
-      await assert.rejects(
-        async () => await rpc.mutate("mutationError", undefined),
-        {
-          status: Status.InternalServerError,
-        }
-      );
+      await assert.rejects(async () => await rpc.mutate("mutationError"), {
+        status: Status.InternalServerError,
+      });
     });
   });
 });

@@ -5,12 +5,12 @@ import { RPError } from "./rperror.js";
 type Client<V extends VersionSpec> = {
   query<K extends keyof V>(
     proc: K,
-    payload: Parameters<V[K]["proc"]>[1]
+    payload?: Parameters<V[K]["proc"]>[1]
   ): ReturnType<V[K]["proc"]>;
 
   mutate<K extends keyof V>(
     proc: K,
-    payload: Parameters<V[K]["proc"]>[1]
+    payload?: Parameters<V[K]["proc"]>[1]
   ): ReturnType<V[K]["proc"]>;
 };
 
@@ -43,7 +43,9 @@ function request(
 
     if (!mutation) {
       url.searchParams.set("p", proc);
-      url.searchParams.set("a", JSON.stringify(payload));
+      if (payload) {
+        url.searchParams.set("a", JSON.stringify(payload));
+      }
     } else {
       headers["content-type"] = "application/json";
       init.body = JSON.stringify({ p: proc, a: payload });
