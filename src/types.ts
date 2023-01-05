@@ -15,14 +15,14 @@ export type VersionSpec = Record<string, ProcedureSpec<any, any>>;
 export type ProcedureReturn = ValidJSON | Promise<ValidJSON>;
 
 export type ProcedureSpec<
-  T extends ValidJSONObject,
+  T extends ValidJSONObject | undefined,
   R extends ProcedureReturn
 > = {
   mutation?: boolean;
   proc: Procedure<T, R>;
 };
 
-type Procedure<T extends ValidJSONObject, R extends ProcedureReturn> = (
-  auth: Authorization,
-  payload: T
-) => R;
+type Procedure<
+  T extends ValidJSONObject | undefined,
+  R extends ProcedureReturn
+> = (auth: Authorization, payload: T) => R;

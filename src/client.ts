@@ -53,6 +53,7 @@ function request(
     init.headers = headers;
 
     const resp = await fetcher(url, init);
+
     if (resp.ok) {
       return (await resp.json()) as ValidJSON;
     }

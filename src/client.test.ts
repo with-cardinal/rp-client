@@ -3,6 +3,7 @@ import assert from "node:assert";
 import type { Authorization } from "./types.js";
 import { client } from "./client.js";
 import { serve } from "@withcardinal/rp-server";
+import { Status } from "@withcardinal/ts-std";
 
 const spec = {
   versions: {
@@ -18,6 +19,12 @@ const spec = {
           return { auth, payload: payload };
         },
       },
+      mutationError: {
+        mutation: true,
+        proc: () => {
+          throw new Error("Something broke");
+        },
+      },
     },
   },
 };
@@ -25,6 +32,7 @@ const spec = {
 const port = 8080;
 const url = `http://127.0.0.1:${port}/rpc`;
 let close: Awaited<ReturnType<typeof serve>>;
+const rpc = client<typeof spec, "1">(url, "1");
 
 describe("client", () => {
   before(async () => {
@@ -37,12 +45,19 @@ describe("client", () => {
 
   describe("mutate", () => {
     it("succeeds", async () => {
-      const rpc = client<typeof spec, "1">(url, "1");
-
       const result = await rpc.mutate("mutationProc", {
         address: "Somewhere St.",
       });
       assert.deepStrictEqual(result.payload.address, "Somewhere St.");
+    });
+
+    it("errors", async () => {
+      await assert.rejects(
+        async () => await rpc.mutate("mutationError", undefined),
+        {
+          status: Status.InternalServerError,
+        }
+      );
     });
   });
 });
