@@ -38,7 +38,10 @@ const port = 8080;
 const url = `http://127.0.0.1:${port}/rpc`;
 let close: Awaited<ReturnType<typeof serve>>;
 const rpc = client<typeof spec, "1">(url, "1");
-
+const rpcWithAuth = client<typeof spec, "1">(url, "1", {
+  scheme: "Bearer",
+  token: "token",
+});
 describe("client", () => {
   before(async () => {
     close = await serve(spec, port);
@@ -54,6 +57,16 @@ describe("client", () => {
         name: "Alan",
       });
       assert.deepStrictEqual(result.payload.name, "Alan");
+    });
+
+    it("succeeds with auth", async () => {
+      const result = await rpcWithAuth.query("queryProc", {
+        name: "Alan",
+      });
+
+      assert.deepStrictEqual(result.payload.name, "Alan");
+      assert.deepStrictEqual(result.auth.scheme, "Bearer");
+      assert.deepStrictEqual(result.auth.token, "token");
     });
 
     it("errors", async () => {
