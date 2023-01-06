@@ -1,6 +1,6 @@
 import { after, before, describe, it } from "node:test";
 import assert from "node:assert";
-import type { Authorization } from "./types.js";
+import type { Authorization } from "./base.js";
 import { client } from "./client.js";
 import { serve } from "@withcardinal/rp-server";
 import { Status } from "@withcardinal/ts-std";

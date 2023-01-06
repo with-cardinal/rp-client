@@ -1,6 +1,6 @@
-import type { RPSpec, VersionSpec, Authorization } from "./types";
+import type { RPSpec, VersionSpec, Authorization } from "./base";
 import type { ValidJSON } from "@withcardinal/ts-std";
-import { RPError } from "./rperror.js";
+import { RPError } from "./base.js";
 
 type Client<V extends VersionSpec> = {
   query<K extends keyof V["queries"]>(
