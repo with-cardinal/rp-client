@@ -8,25 +8,20 @@ import { Status } from "@withcardinal/ts-std";
 const spec = {
   versions: {
     "1": {
-      queryProc: {
-        proc: (auth: Authorization, payload: { name: string }) => {
+      queries: {
+        queryProc: (auth: Authorization, payload: { name: string }) => {
           return { auth, payload: payload };
         },
-      },
-      queryError: {
-        proc: () => {
+
+        queryError: () => {
           throw new Error("Something broke");
         },
       },
-      mutationProc: {
-        mutation: true,
-        proc: (auth: Authorization, payload: { address: string }) => {
+      mutations: {
+        mutationProc: (auth: Authorization, payload: { address: string }) => {
           return { auth, payload: payload };
         },
-      },
-      mutationError: {
-        mutation: true,
-        proc: () => {
+        mutationError: () => {
           throw new Error("Something broke");
         },
       },

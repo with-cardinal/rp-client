@@ -3,15 +3,15 @@ import type { ValidJSON } from "@withcardinal/ts-std";
 import { RPError } from "./rperror.js";
 
 type Client<V extends VersionSpec> = {
-  query<K extends keyof V>(
+  query<K extends keyof V["queries"]>(
     proc: K,
-    payload?: Parameters<V[K]["proc"]>[1]
-  ): ReturnType<V[K]["proc"]>;
+    payload?: Parameters<V["queries"][K]>[1]
+  ): ReturnType<V["queries"][K]>;
 
-  mutate<K extends keyof V>(
+  mutate<K extends keyof V["mutations"]>(
     proc: K,
-    payload?: Parameters<V[K]["proc"]>[1]
-  ): ReturnType<V[K]["proc"]>;
+    payload?: Parameters<V["mutations"][K]>[1]
+  ): ReturnType<V["mutations"][K]>;
 };
 
 export function client<T extends RPSpec, V extends keyof RPSpec["versions"]>(
