@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/with-cardinal/rp-client#readme",
   "devDependencies": {
-    "@types/node": "18.13.0",
+    "@types/node": "18.14.0",
     "@typescript-eslint/eslint-plugin": "5.52.0",
     "@typescript-eslint/parser": "5.52.0",
     "@withcardinal/rp-server": "0.0.14",
